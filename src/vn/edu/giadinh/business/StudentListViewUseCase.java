@@ -2,6 +2,7 @@ package vn.edu.giadinh.business;
 
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,12 +25,16 @@ public class StudentListViewUseCase {
 	public void execute() {
 		List<Student> list = null;
 		List<StudentDTO> listDTO = null;
+		StudentViewModel viewModel = null;
 		try {
 			listDTO = studentListViewDAO.getAll();//chỉ chưa thông tin và điểm
 			//không chứa business rules
 			//chuyển dto student => student business rules
 			list = this.convertToBusinessObjects(listDTO);
-			studentListViewUI.showList(list);
+			//chuyển student business rule => ViewModel
+			viewModel = this.convertToViewModel(list);
+			
+			studentListViewUI.showList(viewModel);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -58,6 +63,27 @@ public class StudentListViewUseCase {
 			}
 		}
 		return students;
+	}
+	
+	private StudentViewModel convertToViewModel(List<Student> students) {
+		StudentViewModel viewModel = new StudentViewModel();
+		List<StudentViewItem> listItem = new ArrayList<StudentViewItem>();
+	    SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+
+		int stt = 1;
+		for (Student st : students) {
+			StudentViewItem item = new StudentViewItem();
+			item.stt = stt++;
+			item.id = st.getId();
+			item.name = st.getName();
+			item.birthDate = fmt.format(st.getBirthDate());
+			item.major = st.getMajor();
+			item.gpa = String.format("%.2f", st.calculateGPA());
+			item.academicRank = st.classifyAcademic();
+			listItem.add(item);
+		}
+		viewModel.listItem = listItem;
+		return viewModel;
 	}
 	
 	
