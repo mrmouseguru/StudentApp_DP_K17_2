@@ -1,4 +1,4 @@
-package vn.edu.giadinh;
+package vn.edu.giadinh.presentation;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
