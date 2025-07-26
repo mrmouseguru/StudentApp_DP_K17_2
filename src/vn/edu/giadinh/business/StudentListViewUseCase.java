@@ -12,29 +12,25 @@ import vn.edu.giadinh.presentation.StudentListViewUI;
 
 public class StudentListViewUseCase {
 	private StudentListViewDAO studentListViewDAO;
-	private StudentListViewUI studentListViewUI;
 	
 	
-	public StudentListViewUseCase(StudentListViewDAO studentListViewDAO, 
-			StudentListViewUI studentListViewUI) {
+	public StudentListViewUseCase(StudentListViewDAO studentListViewDAO) {
 		this.studentListViewDAO = studentListViewDAO;
-		this.studentListViewUI = studentListViewUI;
 	}
 
 
-	public void execute() {
+	public List<StudentViewItem> execute() {
 		List<Student> list = null;
 		List<StudentDTO> listDTO = null;
-		StudentViewModel viewModel = null;
 		try {
 			listDTO = studentListViewDAO.getAll();//chỉ chưa thông tin và điểm
 			//không chứa business rules
 			//chuyển dto student => student business rules
 			list = this.convertToBusinessObjects(listDTO);
 			//chuyển student business rule => ViewModel
-			viewModel = this.convertToViewModel(list);
 			
-			studentListViewUI.showList(viewModel);
+			
+			//studentListViewUI.showList(viewModel);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -42,6 +38,8 @@ public class StudentListViewUseCase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		return this.convertToViewModel(list);
 	}
 	
 	private List<Student> convertToBusinessObjects(List<StudentDTO> dtos) {
@@ -65,8 +63,7 @@ public class StudentListViewUseCase {
 		return students;
 	}
 	
-	private StudentViewModel convertToViewModel(List<Student> students) {
-		StudentViewModel viewModel = new StudentViewModel();
+	private List<StudentViewItem> convertToViewModel(List<Student> students) {
 		List<StudentViewItem> listItem = new ArrayList<StudentViewItem>();
 	    SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -82,8 +79,7 @@ public class StudentListViewUseCase {
 			item.academicRank = st.classifyAcademic();
 			listItem.add(item);
 		}
-		viewModel.listItem = listItem;
-		return viewModel;
+		return listItem;
 	}
 	
 	
