@@ -6,18 +6,20 @@ import javax.swing.table.DefaultTableModel;
 import vn.edu.giadinh.business.Student;
 import vn.edu.giadinh.business.StudentViewItem;
 import vn.edu.giadinh.business.StudentViewModel;
+import vn.edu.giadinh.persistence.Subscriber;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class StudentListViewUI extends JFrame {
+public class StudentListViewUI extends JFrame implements Subscriber {
     private JTextField txtSearch;
     private JButton btnAdd;
     private JTable table;
     private DefaultTableModel model;
     private SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+    private StudentViewModel viewModel;
 
     public StudentListViewUI() {
         super("Danh sách sinh viên");
@@ -46,7 +48,12 @@ public class StudentListViewUI extends JFrame {
        
     }
 
-    public void showList(StudentViewModel viewModel) {
+    public void setViewModel(StudentViewModel viewModel) {
+		this.viewModel = viewModel;
+		viewModel.registerSubscriber(this);
+	}
+    
+    private void showList(StudentViewModel viewModel) {
         model.setRowCount(0);
         for (StudentViewItem item : viewModel.listItem) {
             Object[] row = {
@@ -61,6 +68,12 @@ public class StudentListViewUI extends JFrame {
             model.addRow(row);
         }
     }
+
+	@Override
+	public void update() {
+		this.showList(viewModel);
+		
+	}
 
    
 }

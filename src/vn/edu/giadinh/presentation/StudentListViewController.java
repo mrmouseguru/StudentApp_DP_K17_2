@@ -9,16 +9,14 @@ import vn.edu.giadinh.business.StudentViewModel;
 public class StudentListViewController {
 	private StudentViewModel model;
 	private StudentListViewUseCase listViewUseCase;
-	private StudentListViewUI listViewUI;
 	
 	
 	
-	public StudentListViewController(StudentViewModel model, StudentListViewUseCase listViewUseCase,
-			StudentListViewUI listViewUI) {
-		super();
+	public StudentListViewController(StudentViewModel model, 
+			StudentListViewUseCase listViewUseCase
+			) {
 		this.model = model;
 		this.listViewUseCase = listViewUseCase;
-		this.listViewUI = listViewUI;
 	}
 
 
@@ -28,8 +26,10 @@ public class StudentListViewController {
 		//gửi thông điệp đến StudentListViewUseCase
 		List<StudentViewItem> newList = listViewUseCase.execute();
 		model.listItem = newList;//gửi thông điệp cho model
-		//
-		listViewUI.showList(model);
+		//vi phạm mvc
+		//listViewUI.showList(model);
+		//notify đến subscribers
+		model.notifySubscribers();
 		
 		
 	}

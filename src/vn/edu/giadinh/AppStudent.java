@@ -17,14 +17,14 @@ public class AppStudent {
 		StudentListViewUseCase listViewUseCase = null;
 		StudentListViewController listViewController = null;
 		StudentViewModel model = new StudentViewModel();
+		listViewUI.setViewModel(model);
 		try {
 			
 			listViewDAO = new StudentListViewDAO();
 			listViewUseCase = new StudentListViewUseCase(listViewDAO);
 			
 			listViewController = new StudentListViewController(model, 
-					listViewUseCase,
-					listViewUI);
+					listViewUseCase);
 			listViewController.execute();
 			listViewUI.setVisible(true);
 			
