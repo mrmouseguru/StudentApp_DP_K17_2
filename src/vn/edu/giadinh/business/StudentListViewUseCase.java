@@ -7,37 +7,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.giadinh.persistence.StudentDTO;
-import vn.edu.giadinh.persistence.StudentListViewDAO;
+import vn.edu.giadinh.persistence.StudentListViewDAOGateway;
+import vn.edu.giadinh.persistence.MySQLStudentListViewDAO;
 import vn.edu.giadinh.presentation.StudentListViewUI;
 
 public class StudentListViewUseCase {
-	private StudentListViewDAO studentListViewDAO;
+	//private MySQLStudentListViewDAO studentListViewDAO;
+	StudentListViewDAOGateway viewDAOGateway;
 	
-	
-	public StudentListViewUseCase(StudentListViewDAO studentListViewDAO) {
-		this.studentListViewDAO = studentListViewDAO;
+	public StudentListViewUseCase(StudentListViewDAOGateway studentListViewDAO) {
+		this.viewDAOGateway = studentListViewDAO;
 	}
 
 
 	public List<StudentViewItem> execute() {
 		List<Student> list = null;
 		List<StudentDTO> listDTO = null;
-		try {
-			listDTO = studentListViewDAO.getAll();//chỉ chưa thông tin và điểm
+			listDTO = viewDAOGateway.getAll();//chỉ chưa thông tin và điểm
 			//không chứa business rules
 			//chuyển dto student => student business rules
 			list = this.convertToBusinessObjects(listDTO);
 			//chuyển student business rule => ViewModel
 			
 			
-			//studentListViewUI.showList(viewModel);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		
 		return this.convertToViewModel(list);
 	}

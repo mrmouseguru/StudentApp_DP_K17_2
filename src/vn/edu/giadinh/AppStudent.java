@@ -4,7 +4,8 @@ import java.sql.SQLException;
 
 import vn.edu.giadinh.business.StudentListViewUseCase;
 import vn.edu.giadinh.business.StudentViewModel;
-import vn.edu.giadinh.persistence.StudentListViewDAO;
+import vn.edu.giadinh.persistence.MockDBStudentListViewDAO;
+import vn.edu.giadinh.persistence.MySQLStudentListViewDAO;
 import vn.edu.giadinh.presentation.StudentListViewController;
 import vn.edu.giadinh.presentation.StudentListViewUI;
 
@@ -13,15 +14,17 @@ public class AppStudent {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		StudentListViewUI listViewUI = new StudentListViewUI();
-		StudentListViewDAO listViewDAO = null;
+		MySQLStudentListViewDAO listViewDAO = null;
+		MockDBStudentListViewDAO mockDBStudentListViewDAO;
 		StudentListViewUseCase listViewUseCase = null;
 		StudentListViewController listViewController = null;
 		StudentViewModel model = new StudentViewModel();
 		listViewUI.setViewModel(model);
 		try {
 			
-			listViewDAO = new StudentListViewDAO();
-			listViewUseCase = new StudentListViewUseCase(listViewDAO);
+			listViewDAO = new MySQLStudentListViewDAO();
+			mockDBStudentListViewDAO = new MockDBStudentListViewDAO();
+			listViewUseCase = new StudentListViewUseCase(mockDBStudentListViewDAO);
 			
 			listViewController = new StudentListViewController(model, 
 					listViewUseCase);

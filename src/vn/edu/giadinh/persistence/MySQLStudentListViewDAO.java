@@ -15,11 +15,11 @@ import vn.edu.giadinh.business.EconomicsStudent;
 import vn.edu.giadinh.business.SoftwareStudent;
 import vn.edu.giadinh.business.Student;
 
-public class StudentListViewDAO {
+public class MySQLStudentListViewDAO implements StudentListViewDAOGateway {
 
 	private Connection conn;
 
-	public StudentListViewDAO() throws ClassNotFoundException, SQLException {
+	public MySQLStudentListViewDAO() throws ClassNotFoundException, SQLException {
 		// load driver
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		String username = "root";
@@ -29,43 +29,63 @@ public class StudentListViewDAO {
 		System.out.println("Connected!!!");
 	}
 
-	public List<StudentDTO> getAll() throws SQLException, ParseException {
+	public List<StudentDTO> getAll() {
 		List<StudentDTO> list = new ArrayList<StudentDTO>();
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sql = "select id, name, birthday, major, javaScore," + "htmlScore, cssScore, marketing, salesScore "
 				+ "from student";
 		// tạo đối tượng statement để thực thi câu query trong java
-		stmt = conn.createStatement();
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		// thực thi câu query
-		rs = stmt.executeQuery(sql);
 
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 
 		// duyệt từng sv trong rs
-		while (rs.next()) {
-			StudentDTO dto = new StudentDTO();
-			dto.id = rs.getString("id");
-			dto.name = rs.getString("name");
-			dto.birthDate = fmt.parse(rs.getString("birthday"));
-			dto.major = rs.getString("major");
-			dto.javaScore = rs.getDouble("javaScore");
-			dto.htmlScore = rs.getDouble("htmlScore");
-			dto.cssScore = rs.getDouble("cssScore");
-			dto.marketingScore = rs.getDouble("marketing");
-			dto.salesScore = rs.getDouble("salesScore");
-			list.add(dto);
+		try {
+			while (rs.next()) {
+				StudentDTO dto = new StudentDTO();
+				dto.id = rs.getString("id");
+				dto.name = rs.getString("name");
+				dto.birthDate = fmt.parse(rs.getString("birthday"));
+				dto.major = rs.getString("major");
+				dto.javaScore = rs.getDouble("javaScore");
+				dto.htmlScore = rs.getDouble("htmlScore");
+				dto.cssScore = rs.getDouble("cssScore");
+				dto.marketingScore = rs.getDouble("marketing");
+				dto.salesScore = rs.getDouble("salesScore");
+				list.add(dto);
 
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		rs.close();
-		stmt.close();
-		conn.close();
+		try {
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return list;
 	}
 
 	public static void main(String[] args) {
 		try {
-			new StudentListViewDAO();
+			new MySQLStudentListViewDAO();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
