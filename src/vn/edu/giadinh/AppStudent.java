@@ -3,11 +3,11 @@ package vn.edu.giadinh;
 import java.sql.SQLException;
 
 import vn.edu.giadinh.business.StudentListViewUseCase;
-import vn.edu.giadinh.business.StudentViewModel;
 import vn.edu.giadinh.persistence.MockDBStudentListViewDAO;
 import vn.edu.giadinh.persistence.MySQLStudentListViewDAO;
 import vn.edu.giadinh.presentation.StudentListViewController;
 import vn.edu.giadinh.presentation.StudentListViewUI;
+import vn.edu.giadinh.presentation.StudentViewModel;
 
 public class AppStudent {
 

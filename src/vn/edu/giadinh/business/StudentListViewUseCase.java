@@ -20,7 +20,7 @@ public class StudentListViewUseCase {
 	}
 
 
-	public List<StudentViewItem> execute() {
+	public List<StudentViewDTO> execute() {
 		List<Student> list = null;
 		List<StudentDTO> listDTO = null;
 			listDTO = viewDAOGateway.getAll();//chỉ chưa thông tin và điểm
@@ -28,11 +28,8 @@ public class StudentListViewUseCase {
 			//chuyển dto student => student business rules
 			list = this.convertToBusinessObjects(listDTO);
 			//chuyển student business rule => ViewModel
-			
-			
 		
-		
-		return this.convertToViewModel(list);
+		return this.convertToViewDTO(list);
 	}
 	
 	private List<Student> convertToBusinessObjects(List<StudentDTO> dtos) {
@@ -56,21 +53,17 @@ public class StudentListViewUseCase {
 		return students;
 	}
 	
-	private List<StudentViewItem> convertToViewModel(List<Student> students) {
-		List<StudentViewItem> listItem = new ArrayList<StudentViewItem>();
-	    SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
-
-		int stt = 1;
+	private List<StudentViewDTO> convertToViewDTO(List<Student> students) {
+		List<StudentViewDTO> listItem = new ArrayList<>();
 		for (Student st : students) {
-			StudentViewItem item = new StudentViewItem();
-			item.stt = stt++;
-			item.id = st.getId();
-			item.name = st.getName();
-			item.birthDate = fmt.format(st.getBirthDate());
-			item.major = st.getMajor();
-			item.gpa = String.format("%.2f", st.calculateGPA());
-			item.academicRank = st.classifyAcademic();
-			listItem.add(item);
+			StudentViewDTO dto = new StudentViewDTO();
+			dto.id = st.getId();
+			dto.name = st.getName();
+			dto.birthDate = st.getBirthDate();
+			dto.major = st.getMajor();
+			dto.gpa = st.calculateGPA();
+			dto.academicRank = st.classifyAcademic();
+			listItem.add(dto);
 		}
 		return listItem;
 	}
