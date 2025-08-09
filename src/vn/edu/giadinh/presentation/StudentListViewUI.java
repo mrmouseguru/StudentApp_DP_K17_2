@@ -4,7 +4,13 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import vn.edu.giadinh.business.Student;
+import vn.edu.giadinh.business.OpenAddStudentForm.OpenAddStudentFormUseCase;
 import vn.edu.giadinh.persistence.Subscriber;
+import vn.edu.giadinh.persistence.OpenAddStudentForm.MockOpenAddStudentFormDAO;
+import vn.edu.giadinh.persistence.OpenAddStudentForm.OpenAddStudentFormGateway;
+import vn.edu.giadinh.presentation.OpenAddStudentForm.OpenAddStudentFormController;
+import vn.edu.giadinh.presentation.OpenAddStudentForm.OpenAddStudentFormModel;
+import vn.edu.giadinh.presentation.OpenAddStudentForm.OpenAddStudentFormView;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -41,7 +47,31 @@ public class StudentListViewUI extends JFrame implements Subscriber {
         table = new JTable(model);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
-       
+       btnAdd.addActionListener(new ActionListener() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			openAddStudentForm();
+		}
+
+		private void openAddStudentForm() {
+			OpenAddStudentFormGateway gateway;
+			OpenAddStudentFormController controller;
+			OpenAddStudentFormUseCase uc;
+			OpenAddStudentFormView view;
+			view = new OpenAddStudentFormView();
+			OpenAddStudentFormModel model = new OpenAddStudentFormModel();
+			view.setModel(model);
+
+			gateway = new MockOpenAddStudentFormDAO();
+			uc = new OpenAddStudentFormUseCase(gateway);
+			
+			
+			controller = new OpenAddStudentFormController(uc, model);
+			controller.execute();
+			
+		}
+	});
 
        
     }
