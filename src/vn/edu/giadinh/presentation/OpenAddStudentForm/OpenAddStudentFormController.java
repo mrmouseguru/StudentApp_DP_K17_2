@@ -31,6 +31,7 @@ public class OpenAddStudentFormController {
 			MajorItem item = new MajorItem();
 			item.id = String.valueOf(resMajorDTO.id);
 			item.name = resMajorDTO.name;
+			list.add(item);
 		}
 		
 		return list;
